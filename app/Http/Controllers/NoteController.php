@@ -20,12 +20,16 @@ class NoteController extends Controller
     {
         $request->validate([
             'date' => 'required|date',
-            'content' => 'required|string'
+            'content' => 'required|string',
+            'reminder_time' => 'nullable'
         ]);
 
         Note::updateOrCreate(
             ['user_id' => auth()->id(), 'date' => $request->date],
-            ['content' => $request->content]
+            [
+                'content' => $request->content,
+                'reminder_time' => $request->reminder_time
+            ]
         );
 
         return back()->with('success', 'Note saved!');

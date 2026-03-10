@@ -29,6 +29,10 @@ Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+
+    // AI Advisor Routes
+    Route::get('/ai-advisor', [\App\Http\Controllers\AiAdvisorController::class, 'index'])->name('ai-advisor.index');
+    Route::post('/ai-advisor/chat', [\App\Http\Controllers\AiAdvisorController::class, 'chat'])->name('ai-advisor.chat');
 });
 
 require __DIR__.'/auth.php';

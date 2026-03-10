@@ -1,45 +1,97 @@
 <x-app-layout>
-    <x-slot name="header">
-        <h2 class="font-bold text-xl text-gray-800">Edit Expense</h2>
-    </x-slot>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
 
-    <div class="py-6 px-4 sm:px-6 max-w-lg mx-auto">
-        <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
-            <form method="POST" action="{{ route('expenses.update', $expense->id) }}" class="space-y-5">
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f8fafc;
+        }
+
+        .form-card {
+            background: white;
+            border: 1px solid #e2e8f0;
+            border-radius: 1.5rem;
+            padding: 2.5rem;
+        }
+
+        .btn-primary {
+            background-color: #6366f1;
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.75rem;
+            font-weight: 600;
+            transition: all 0.2s;
+            text-align: center;
+        }
+
+        .btn-primary:hover {
+            background-color: #4f46e5;
+        }
+
+        .btn-secondary {
+            color: #64748b;
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.75rem;
+            font-weight: 600;
+            transition: all 0.2s;
+            text-align: center;
+            border: 1px solid #e2e8f0;
+        }
+
+        .btn-secondary:hover {
+            background-color: #f8fafc;
+        }
+    </style>
+
+    <div class="py-12 px-4 sm:px-6 max-w-xl mx-auto min-h-screen">
+        <div class="mb-10 text-center">
+            <h1 class="text-3xl font-bold text-gray-900 tracking-tight">Edit Expense</h1>
+            <p class="text-gray-500 mt-2">Update the details of this transaction.</p>
+        </div>
+
+        <div class="form-card">
+            <form method="POST" action="{{ route('expenses.update', $expense->id) }}" class="space-y-6">
                 @csrf
                 @method('PUT')
 
                 <div>
-                    <x-input-label for="description" :value="__('Description')" />
-                    <x-text-input id="description" class="block mt-1 w-full rounded-xl text-sm" type="text"
-                        name="description" :value="old('description', $expense->description)" required autofocus />
-                    <x-input-error :messages="$errors->get('description')" class="mt-1" />
+                    <label for="description"
+                        class="block text-xs font-black text-gray-400 uppercase tracking-widest mb-2">Description</label>
+                    <input id="description"
+                        class="block w-full border-gray-200 rounded-xl text-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all p-3"
+                        type="text" name="description" :value="old('description', $expense->description)" required
+                        autofocus />
+                    <x-input-error :messages="$errors->get('description')" class="mt-2" />
                 </div>
 
                 <div>
-                    <x-input-label for="amount" :value="__('Amount')" />
-                    <div class="relative mt-1">
+                    <label for="amount"
+                        class="block text-xs font-black text-gray-400 uppercase tracking-widest mb-2">Amount
+                        ({{ auth()->user()->currency }})</label>
+                    <div class="relative">
                         <span
-                            class="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-400 text-sm">{{ auth()->user()->currency }}</span>
-                        <x-text-input id="amount" class="block w-full pl-7 rounded-xl text-sm" type="number"
-                            step="0.01" name="amount" :value="old('amount', $expense->amount)" required />
+                            class="absolute inset-y-0 left-0 pl-4 flex items-center text-gray-400 font-bold text-sm">{{ auth()->user()->currency }}</span>
+                        <input id="amount"
+                            class="block w-full pl-10 border-gray-200 rounded-xl text-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all p-3"
+                            type="number" step="0.01" name="amount" :value="old('amount', $expense->amount)"
+                            required />
                     </div>
-                    <x-input-error :messages="$errors->get('amount')" class="mt-1" />
+                    <x-input-error :messages="$errors->get('amount')" class="mt-2" />
                 </div>
 
                 <div>
-                    <x-input-label for="date" :value="__('Date')" />
-                    <x-text-input id="date" class="block mt-1 w-full rounded-xl text-sm" type="date"
-                        name="date" :value="old('date', $expense->date->format('Y-m-d'))" required />
-                    <x-input-error :messages="$errors->get('date')" class="mt-1" />
+                    <label for="date"
+                        class="block text-xs font-black text-gray-400 uppercase tracking-widest mb-2">Transaction
+                        Date</label>
+                    <input id="date"
+                        class="block w-full border-gray-200 rounded-xl text-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all p-3"
+                        type="date" name="date" :value="old('date', $expense->date->format('Y-m-d'))" required />
+                    <x-input-error :messages="$errors->get('date')" class="mt-2" />
                 </div>
 
-                <div class="flex gap-3 pt-2">
-                    <a href="{{ route('expenses.index') }}"
-                        class="flex-1 text-center py-2.5 px-4 border border-gray-300 rounded-full text-sm font-semibold text-gray-600 hover:bg-gray-50 transition">Cancel</a>
-                    <button type="submit"
-                        class="flex-1 py-2.5 px-4 bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-semibold rounded-full shadow transition active:scale-95">Update
-                        Expense</button>
+                <div class="grid grid-cols-2 gap-4 pt-4">
+                    <a href="{{ route('expenses.index') }}" class="btn-secondary">Cancel</a>
+                    <button type="submit" class="btn-primary">Update Expense</button>
                 </div>
             </form>
         </div>

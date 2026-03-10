@@ -34,16 +34,23 @@ class ExpenseController extends Controller
         // Remaining balance
         $remainingSalary = $monthlyIncome - $monthlyTotal;
 
-        // Chart Data: Last 7 days expenses
+        // Chart Data: Last 7 days expenses & income
         $last7Days = collect();
-        $last7DaysData = collect();
+        $last7DaysExpenseData = collect();
+        $last7DaysIncomeData = collect();
         for ($i = 6; $i >= 0; $i--) {
             $date = now()->subDays($i);
             $last7Days->push($date->format('M d'));
-            $sum = Expense::where('user_id', $userId)
+            
+            $expenseSum = Expense::where('user_id', $userId)
                 ->whereDate('date', $date->format('Y-m-d'))
                 ->sum('amount');
-            $last7DaysData->push($sum);
+            $last7DaysExpenseData->push($expenseSum);
+
+            $incomeSum = Income::where('user_id', $userId)
+                ->whereDate('date', $date->format('Y-m-d'))
+                ->sum('amount');
+            $last7DaysIncomeData->push($incomeSum);
         }
 
         // Recent Notes
@@ -54,7 +61,7 @@ class ExpenseController extends Controller
 
         return view('dashboard', compact(
             'dailyTotal', 'weeklyTotal', 'monthlyTotal', 'monthlyIncome', 'remainingSalary',
-            'last7Days', 'last7DaysData', 'recentNotes'
+            'last7Days', 'last7DaysExpenseData', 'last7DaysIncomeData', 'recentNotes'
         ));
     }
     /**
